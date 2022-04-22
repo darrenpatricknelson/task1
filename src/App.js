@@ -26,24 +26,32 @@ class App extends React.Component {
 
       // Now that I have a location that can be search along with the url
       // we can use this url in the fetch function
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=53118036333eeaefac8e1b58d9d859b7&units=metric`;
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${process.env.REACT_APP_MY_API_KEY}&units=metric`;
 
       fetch(url)
         .then((response) => {
+          // I'm checking the status of the data package that we fetched
+          // if it is no ok, It throws and error
+          if (!response.ok) {
+            throw new Error(respone.statusText);
+          }
           return response.json();
         })
+        .then((data) => {
+          this.setState({
+            isLoaded: true,
+            data: data,
+            error: null
+          });
+        })
+        // that error is caught here
+        // I know we were supposed to handle the error in the promise but I could not figure it out
+        // All of my time spent researching error handling led me to the throw/catch method
+        // So I implemented that and it works
         .catch((error) => {
           this.setState({
             isLoaded: true,
             error
-          });
-          // console.log(error);
-        })
-        .then((data) => {
-          console.log(data);
-          this.setState({
-            isLoaded: true,
-            data: data
           });
         });
     }
@@ -61,7 +69,9 @@ class App extends React.Component {
           />
         </div>
 
+        {/* if error is true - display an error message */}
         {this.state.error && <Error messsage={this.state.errorMessage} />}
+        {/* if the error is false - return a componenet display the weather data */}
         {this.state.isLoaded && !this.state.error && (
           <WeatherResults data={this.state.data} />
         )}
