@@ -33,7 +33,7 @@ class App extends React.Component {
           // I'm checking the status of the data package that we fetched
           // if it is no ok, It throws and error
           if (!response.ok) {
-            throw new Error(respone.statusText);
+            throw new Error(response.statusText);
           }
           return response.json();
         })
