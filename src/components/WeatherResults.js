@@ -39,7 +39,7 @@ export default function WeatherResults(props) {
         <div className="wind">
           <p>
             {/* the wind speed  */}
-            Wind speed: {data.wind.speed.toFixed(1)}m/s
+            Wind speed: {data.wind.speed.toFixed(1)} m/s
           </p>
           <p>
             Wind direction:{' '}

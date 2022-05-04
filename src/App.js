@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'isomorphic-fetch';
 import './App.css';
 import WeatherResults from './components/WeatherResults';
