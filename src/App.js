@@ -4,6 +4,22 @@ import './App.css';
 import WeatherResults from './components/WeatherResults';
 import Error from './components/Error';
 
+export const fetchWeatherData = async (location) => {
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${process.env.REACT_APP_MY_API_KEY}&units=metric`;
+
+  const response = await fetch(url);
+  // I'm checking the status of the data package that we fetched
+  // if it is no ok, It throws and erro
+  return new Promise(async (resolve, reject) => {
+    if (response.ok) {
+      const data = await response.json();
+      resolve(data);
+    }
+
+    reject(response.statusText);
+  });
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -28,30 +44,18 @@ class App extends React.Component {
       // we can use this url in the fetch function
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${process.env.REACT_APP_MY_API_KEY}&units=metric`;
 
-      fetch(url)
-        .then((response) => {
-          // I'm checking the status of the data package that we fetched
-          // if it is no ok, It throws and error
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-          return response.json();
-        })
-        .then((data) => {
+      fetchWeatherData(location)
+        .then((data) =>
           this.setState({
             isLoaded: true,
             data: data,
-            error: null
-          });
-        })
-        // that error is caught here
-        // I know we were supposed to handle the error in the promise but I could not figure it out
-        // All of my time spent researching error handling led me to the throw/catch method
-        // So I implemented that and it works
+            error: false
+          })
+        )
         .catch((error) => {
           this.setState({
             isLoaded: true,
-            error
+            error: !!error
           });
         });
     }

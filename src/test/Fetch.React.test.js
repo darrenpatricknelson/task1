@@ -1,12 +1,15 @@
-const handleLocationSearch = require('../App');
+import { fetchWeatherData } from '../App';
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({ data })
-  })
-);
+test('the response is okay and returns data', async () => {
+  // testing the weather for cape town
+  // expecting the returned value from the function to be resolved
+  //  and it needs to be truthy
+  return expect(fetchWeatherData('cape+town')).resolves.toBeTruthy();
+});
 
-test('data is about the weather', async () => {
-  const data = await handleLocationSearch('Enter');
-  expect(data).toBe('weather');
+// testing the failure as well
+test('the fetch fails with a 404', () => {
+  // checking an incorrect input (dummy) which is not a city
+  // and seeing if it matches 'Not found'
+  return expect(fetchWeatherData('dummy')).rejects.toMatch('Not Found');
 });
